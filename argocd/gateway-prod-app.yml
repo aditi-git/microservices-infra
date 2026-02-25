@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: gateway-prod
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/aditi-git/microservices-infra
+    targetRevision: main
+    path: helm/gateway
+    helm:
+      valueFiles:
+        - ../../environments/production/gateway-values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: prod
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

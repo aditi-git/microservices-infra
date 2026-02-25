@@ -1,0 +1,16 @@
+replicaCount: 2
+image:
+  repository: ghcr.io/aditi-git/gateway
+  tag: "GITHUB_SHA_TAG_FOR_PROD" # updated manually or via promotion
+service:
+  type: ClusterIP
+  port: 8080
+env:
+  SPRING_PROFILES_ACTIVE: prod
+resources:
+  limits:
+    cpu: "500m"
+    memory: "512Mi"
+  requests:
+    cpu: "200m"
+    memory: "256Mi"

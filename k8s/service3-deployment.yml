@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: service3
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: service3
+  template:
+    metadata:
+      labels:
+        app: service3
+    spec:
+      imagePullSecrets:
+        - name: ghcr-secret
+      containers:
+        - name: service3
+          image: ghcr.io/aditi-git/service3:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 9094
+          env:
+            - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+              value: http://eureka-server:8761/eureka/

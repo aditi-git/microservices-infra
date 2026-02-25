@@ -1,0 +1,16 @@
+replicaCount: 1
+image:
+  repository: ghcr.io/aditi-git/gateway
+  tag: "GITHUB_SHA_TAG_FROM_CI" # CI will update this automatically
+service:
+  type: ClusterIP
+  port: 8080
+env:
+  SPRING_PROFILES_ACTIVE: staging
+resources:
+  limits:
+    cpu: "300m"
+    memory: "256Mi"
+  requests:
+    cpu: "100m"
+    memory: "128Mi"

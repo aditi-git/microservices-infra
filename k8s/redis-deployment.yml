@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-security
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis-security
+  template:
+    metadata:
+      labels:
+        app: redis-security
+    spec:
+      imagePullSecrets:
+        - name: ghcr-secret
+      containers:
+        - name: redis-security
+          image: ghcr.io/aditi-git/redissecurity:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          env:
+            - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+              value: http://eureka-server:8761/eureka/

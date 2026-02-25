@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: service1-staging
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/aditi-git/microservices-infra
+    targetRevision: main
+    path: helm/service1
+    helm:
+      valueFiles:
+        - ../../environments/staging/service1-values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: staging
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

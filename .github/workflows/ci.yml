@@ -1,0 +1,47 @@
+name: CI Build
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Build All Services
+        run: |
+          mvn clean install -f gateway/pom.xml
+          mvn clean install -f service1/pom.xml
+          mvn clean install -f service2/pom.xml
+
+      - name: Login to GHCR
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Build & Push Docker Images
+        run: |
+          docker build -t ghcr.io/${{ github.repository }}/gateway:${{ github.sha }} ./gateway
+          docker push ghcr.io/${{ github.repository }}/gateway:${{ github.sha }}
+          docker build -t ghcr.io/${{ github.repository }}/service1:${{ github.sha }} ./service1
+          docker push ghcr.io/${{ github.repository }}/service1:${{ github.sha }}
+          docker build -t ghcr.io/${{ github.repository }}/service2:${{ github.sha }} ./service2
+          docker push ghcr.io/${{ github.repository }}/service2:${{ github.sha }}
+
+      - name: Update Helm Values in Infra Repo
+        run: |
+          git clone https://github.com/YOUR_USERNAME/microservices-infra.git
+          cd microservices-infra/environments/staging
+          sed -i "s/tag:.*/tag: ${{ github.sha }}/" gateway-values.yaml
+          sed -i "s/tag:.*/tag: ${{ github.sha }}/" service1-values.yaml
+          sed -i "s/tag:.*/tag: ${{ github.sha }}/" service2-values.yaml
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git commit -am "Update image tags to ${{ github.sha }}"
+          git push https://YOUR_GITHUB_TOKEN@github.com/YOUR_USERNAME/microservices-infra.git

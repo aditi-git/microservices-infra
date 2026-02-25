@@ -44,4 +44,4 @@ jobs:
           git config user.name "github-actions"
           git config user.email "actions@github.com"
           git commit -am "Update image tags to ${{ github.sha }}"
-          git push https://YOUR_GITHUB_TOKEN@github.com/YOUR_USERNAME/microservices-infra.git
+          git push https://x-access-token:${{ secrets.INFRA_REPO_TOKEN }}@github.com/aditi-git/microservices-infra.git

@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: service2-ingress
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /api/v1
+            pathType: Prefix
+            backend:
+              service:
+                name: service2-v1-svc
+                port:
+                  number: 80
+
+          - path: /api/v2
+            pathType: Prefix
+            backend:
+              service:
+                name: service2-v2-svc
+                port:
+                  number: 80

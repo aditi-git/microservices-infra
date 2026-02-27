@@ -1,7 +1,7 @@
 replicaCount: 2
 image:
   repository: ghcr.io/aditi-git/service1
-  tag: 74399416c117195841d7c6d8aca128d0b77a9551
+  tag: a74ca3e928c94d9487bd7351048d03a344b8f073
 service:
   type: ClusterIP
   port: 8080

@@ -4,7 +4,7 @@ metadata:
   name: gateway-prod
   namespace: argocd
 spec:
-  project: default2
+  project: default3
   source:
     repoURL: https://github.com/aditi-git/microservices-infra
     targetRevision: main
